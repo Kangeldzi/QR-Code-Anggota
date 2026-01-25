@@ -1,60 +1,62 @@
+import { getAnggotaById } from '../../lib/googleSheets';
+
 export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  
+  // Tangani OPTIONS request (CORS preflight)
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
+  // Hanya terima GET requests
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
   const { id } = req.query;
   
-  // Data dummy - PASTI BEKERJA
-  const dataDummy = {
-    'NIA-001': {
-      id: 'NIA-001',
-      nama: 'ELDI SUGIANTO, S.Kom',
-      email: 'eldzi4212@gmail.com',
-      status: 'AKTIF',
-      posisi: 'Anggota',
-      whatsapp: '08123456789',
-      simpanan_pokok: 0,
-      simpanan_wajib: 0,
-      simpanan_sukarela: 0,
-      total_pinjaman: 0,
-      shu_estimasi: 0
-    },
-    'NIA-002': {
-      id: 'NIA-002',
-      nama: 'SITI RAHAYU',
-      email: 'siti@email.com',
-      status: 'AKTIF',
-      posisi: 'Anggota',
-      whatsapp: '08129876543',
-      simpanan_pokok: 500000,
-      simpanan_wajib: 100000,
-      simpanan_sukarela: 150000,
-      total_pinjaman: 2000000,
-      shu_estimasi: 60000
-    }
-  };
+  if (!id) {
+    return res.status(400).json({ 
+      error: 'ID anggota diperlukan',
+      contoh: '/api/anggota?id=NIA-001' 
+    });
+  }
   
-  // Jika ID ada di data dummy
-  if (id && dataDummy[id]) {
-    const anggota = dataDummy[id];
-    const totalSimpanan = 
-      anggota.simpanan_pokok + 
-      anggota.simpanan_wajib + 
-      anggota.simpanan_sukarela;
+  try {
+    const anggota = await getAnggotaById(id);
     
-    return res.json({
+    if (!anggota) {
+      return res.status(404).json({ 
+        error: 'Anggota tidak ditemukan',
+        id: id 
+      });
+    }
+    
+    // Hitung total simpanan
+    const totalSimpanan = 
+      (anggota.simpanan_pokok || 0) + 
+      (anggota.simpanan_wajib || 0) + 
+      (anggota.simpanan_sukarela || 0);
+    
+    // Response sukses
+    res.status(200).json({
       success: true,
       data: {
         ...anggota,
         total_simpanan: totalSimpanan
       },
       timestamp: new Date().toISOString(),
-      source: 'dummy-data'
+      source: 'google-sheets'
+    });
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    res.status(500).json({ 
+      error: 'Terjadi kesalahan server',
+      message: error.message 
     });
   }
-  
-  // Jika ID tidak ditemukan
-  res.status(404).json({
-    success: false,
-    error: 'Anggota tidak ditemukan',
-    id: id,
-    contoh_id: ['NIA-001', 'NIA-002']
-  });
 }

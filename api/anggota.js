@@ -1,62 +1,37 @@
-import { getAnggotaById } from '../../lib/googleSheets';
-
+// api/anggota.js (DUMMY VERSION - untuk testing)
 export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET');
-  
-  // Tangani OPTIONS request (CORS preflight)
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-  
-  // Hanya terima GET requests
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-  
   const { id } = req.query;
   
   if (!id) {
-    return res.status(400).json({ 
-      error: 'ID anggota diperlukan',
-      contoh: '/api/anggota?id=NIA-001' 
-    });
+    return res.status(400).json({ error: 'ID diperlukan' });
   }
   
-  try {
-    const anggota = await getAnggotaById(id);
-    
-    if (!anggota) {
-      return res.status(404).json({ 
-        error: 'Anggota tidak ditemukan',
-        id: id 
-      });
+  // Data dummy
+  const dataDummy = {
+    'NIA-001': {
+      id: 'NIA-001',
+      nama: 'ELDI SUGIANTO, S.Kom',
+      email: 'eldzi4212@gmail.com',
+      status: 'AKTIF',
+      posisi: 'Anggota',
+      whatsapp: '08123456789',
+      simpanan_pokok: 500000,
+      simpanan_wajib: 100000,
+      simpanan_sukarela: 250000
     }
-    
-    // Hitung total simpanan
-    const totalSimpanan = 
-      (anggota.simpanan_pokok || 0) + 
-      (anggota.simpanan_wajib || 0) + 
-      (anggota.simpanan_sukarela || 0);
-    
-    // Response sukses
-    res.status(200).json({
+  };
+  
+  if (dataDummy[id]) {
+    res.json({
       success: true,
-      data: {
-        ...anggota,
-        total_simpanan: totalSimpanan
-      },
+      data: dataDummy[id],
       timestamp: new Date().toISOString(),
-      source: 'google-sheets'
+      source: 'dummy-data'
     });
-    
-  } catch (error) {
-    console.error('API Error:', error);
-    res.status(500).json({ 
-      error: 'Terjadi kesalahan server',
-      message: error.message 
+  } else {
+    res.status(404).json({ 
+      error: 'Anggota tidak ditemukan',
+      id: id 
     });
   }
 }

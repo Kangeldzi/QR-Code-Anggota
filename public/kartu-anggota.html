@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Kartu Digital Anggota Koperasi</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  background:linear-gradient(180deg,#061b12,#020b07);
+  font-family:'Poppins',sans-serif;
+  display:flex;
+  justify-content:center;
+  padding:16px;
+  color:#fff;
+  min-height:100vh;
+}
+
+/* KARTU */
+.card{
+  width:100%;
+  max-width:390px;
+  background:linear-gradient(160deg,#0f3d28,#062015);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 0 35px rgba(0,255,160,.35);
+  border:1px solid rgba(0,255,160,.35);
+  align-self:center;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  border-bottom:1px dashed rgba(255,255,255,.25);
+  padding-bottom:14px;
+}
+
+/* LOGO GLASS */
+.logo-wrap{
+  width:86px;
+  height:86px;
+  margin:0 auto 10px;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(12px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:
+    0 0 18px rgba(0,255,160,.6),
+    inset 0 0 12px rgba(255,255,255,.25);
+  transition:.4s ease;
+  animation:float 4s ease-in-out infinite;
+}
+.logo-wrap:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 28px rgba(0,255,160,.9);
+}
+.logo-wrap img{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+.header h1{
+  font-size:16px;
+  margin:0;
+  font-weight:700;
+  color:#7dffb2;
+}
+.header small{
+  font-size:11px;
+  opacity:.85;
+}
+
+/* STATUS */
+.status{
+  margin:12px auto;
+  text-align:center;
+}
+.status span{
+  padding:6px 18px;
+  border-radius:20px;
+  background:#00ff9d33;
+  color:#00ff9d;
+  font-size:12px;
+  font-weight:600;
+}
+.status-inactive{
+  background:#ff3d0033 !important;
+  color:#ffa000 !important;
+}
+
+/* IDENTITAS */
+.identity{
+  text-align:center;
+  margin:14px 0;
+}
+.identity h2{
+  margin:4px 0;
+  font-size:17px;
+}
+.identity p{
+  margin:0;
+  font-size:12px;
+  color:#a9ffd1;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:16px 0;
+}
+.stat{
+  background:rgba(0,255,160,.15);
+  border-radius:14px;
+  padding:10px;
+  text-align:center;
+}
+.stat small{
+  font-size:10px;
+  opacity:.9;
+}
+.stat b{
+  display:block;
+  margin-top:6px;
+  font-size:13px;
+}
+
+/* DATA */
+.data{
+  font-size:12px;
+}
+.data div{
+  display:flex;
+  justify-content:space-between;
+  padding:7px 0;
+  border-bottom:1px dashed rgba(255,255,255,.25);
+}
+.data span{
+  color:#b6ffd9;
+}
+
+/* ACTION BUTTON */
+.actions{
+  display:flex;
+  gap:12px;
+  margin:18px 0 6px;
+}
+.actions button{
+  flex:1;
+  border:none;
+  padding:10px;
+  border-radius:14px;
+  background:rgba(0,255,160,.2);
+  color:#00ff9d;
+  font-weight:600;
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 14px rgba(0,255,160,.5);
+  transition:.3s;
+  cursor:pointer;
+  font-family:'Poppins',sans-serif;
+}
+.actions button:hover{
+  background:#00ff9d;
+  color:#003a24;
+  transform:translateY(-2px);
+}
+
+/* FOOTER */
+.footer{
+  margin-top:10px;
+  text-align:center;
+  font-size:10px;
+  opacity:.75;
+}
+
+/* LOADING */
+.loading{
+  text-align:center;
+  padding:30px;
+}
+.spinner{
+  width:40px;
+  height:40px;
+  border:3px solid rgba(0,255,160,.3);
+  border-top:3px solid #00ff9d;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin:0 auto 15px;
+}
+@keyframes spin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+
+/* LAST UPDATE */
+.last-update{
+  font-size:9px;
+  text-align:center;
+  margin-top:5px;
+  opacity:.6;
+}
+
+/* ERROR MESSAGE */
+.error-message{
+  background:rgba(255,0,0,0.1);
+  border:1px solid rgba(255,0,0,0.3);
+  border-radius:10px;
+  padding:10px;
+  margin:10px 0;
+  text-align:center;
+  font-size:11px;
+  color:#ff9999;
+}
+
+/* ID DISPLAY */
+.id-display{
+  text-align:center;
+  font-size:10px;
+  color:#7dffb2;
+  margin-top:5px;
+  padding:5px;
+  background:rgba(0,255,160,0.1);
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="cardContent">
+  <!-- LOADING STATE -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Memuat data dari Google Sheets...</p>
+    <div class="id-display" id="loadingId">ID: Loading...</div>
+  </div>
+  
+  <!-- ERROR MESSAGE (hidden by default) -->
+  <div class="error-message" id="errorMessage" style="display:none;">
+    ⚠️ <span id="errorText"></span>
+  </div>
+  
+  <!-- CONTENT (hidden by default) -->
+  <div id="content" style="display:none;">
+    <div class="header">
+      <div class="logo-wrap">
+        <img id="fotoProfil" src="https://ui-avatars.com/api/?name=K&background=3b82f6&color=fff">
+      </div>
+      <h1>KOPERASI ASMARA TANI</h1>
+      <small>Kartu Anggota Digital</small>
+    </div>
+
+    <div class="status">
+      <span id="statusText">AKTIF</span>
+    </div>
+
+    <div class="identity">
+      <h2 id="nama">Loading...</h2>
+      <p id="nia">NIA : Loading...</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><small>Simpanan Pokok</small><b id="pokok">Rp 0</b></div>
+      <div class="stat"><small>Simpanan Wajib</small><b id="wajib">Rp 0</b></div>
+      <div class="stat"><small>Simpanan Sukarela</small><b id="sukarela">Rp 0</b></div>
+    </div>
+
+    <div class="data">
+      <div><span>Alamat</span><b id="alamat">Loading...</b></div>
+      <div><span>Jenis Kelamin</span><b id="jk">Loading...</b></div>
+      <div><span>Agama</span><b id="agama">Loading...</b></div>
+      <div><span>NIK</span><b id="nik">Loading...</b></div>
+      <div><span>Email</span><b id="email">Loading...</b></div>
+      <div><span>Telepon</span><b id="telepon">Loading...</b></div>
+      <div><span>Tanggal Daftar</span><b id="tglDaftar">Loading...</b></div>
+      <div><span>Total Simpanan</span><b id="totalSimpanan">Rp 0</b></div>
+      <div><span>Total Pinjaman</span><b id="totalPinjaman">Rp 0</b></div>
+      <div><span>Estimasi SHU</span><b id="shu">Rp 0</b></div>
+    </div>
+
+    <div class="actions">
+      <button onclick="window.print()">🖨️ Cetak</button>
+      <button onclick="exportPDF()">📥 Export PDF</button>
+      <button onclick="refreshData()">🔄 Refresh</button>
+    </div>
+
+    <div class="footer">
+      Data real-time dari Google Sheets<br>
+      © Koperasi Asmara Tani <span id="currentYear"></span>
+      <div class="last-update" id="lastUpdate">Terakhir update: -</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =================== CONFIGURATION ===================
+const CONFIG = {
+  // URL Google Apps Script Anda (GANTI INI!)
+  API_URL: 'https://script.google.com/macros/s/1lWx-Utyl91udeO00NRfED3DydP39z1NXsX7grnzKEgU/exec',
+  
+  // Default ID jika tidak ada parameter URL
+  DEFAULT_ID: 'NIA-001',
+  
+  // Interval auto-refresh (milidetik)
+  REFRESH_INTERVAL: 60000, // 60 detik
+  
+  // Fallback data jika API error
+  FALLBACK_DATA: {
+    'NIA-001': {
+      nama: 'ELDI SUGIANTO, S.Kom',
+      email: 'eldzi4212@gmail.com',
+      status: 'AKTIF',
+      posisi: 'Anggota',
+      alamat: 'Pamijahan - Bogor',
+      whatsapp: '085218483129',
+      jenis_kelamin: 'Laki-laki',
+      agama: 'Islam',
+      nik: '3201171212810011',
+      tanggal_bergabung: '2020-09-18',
+      simpanan_pokok: 200000,
+      simpanan_wajib: 0,
+      simpanan_sukarela: 0,
+      total_pinjaman: 0,
+      shu_estimasi: 75000,
+      foto: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjh1oM43gxD4iCHpHRBrrbkCHRU5MigalAWf4G5x-cTLfRRxWeeTwGqwNz8FtSdSgcexhRAIWMX7eZoOxo0b-i8kB2EUr44TCkMCZ8VVfQTJpL0AgptbY8hjsTZtqg6jbS2MMOuIVf9FvNOR-JsZr4dvrpqTQT0I5qY5OB063z38W0mTIVhQrBPTASmQp0/s1280/1000175639.jpg'
+    }
+  }
+};
+
+// =================== GLOBAL VARIABLES ===================
+let currentMemberId = CONFIG.DEFAULT_ID;
+let refreshTimer = null;
+
+// =================== HELPER FUNCTIONS ===================
+function formatRupiah(angka) {
+  if (!angka && angka !== 0) return 'Rp 0';
+  return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function formatDate(dateString) {
+  if (!dateString || dateString === '-' || dateString.toLowerCase() === 'loading...') return '-';
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    return date.toLocaleDateString('id-ID', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  } catch {
+    return dateString;
+  }
+}
+
+function getParameterByName(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+
+function showError(message) {
+  const errorElement = document.getElementById('errorMessage');
+  const errorText = document.getElementById('errorText');
+  
+  errorText.textContent = message;
+  errorElement.style.display = 'block';
+  
+  // Auto hide error after 10 seconds
+  setTimeout(() => {
+    errorElement.style.display = 'none';
+  }, 10000);
+}
+
+function hideError() {
+  document.getElementById('errorMessage').style.display = 'none';
+}
+
+// =================== LOAD DATA FROM GOOGLE SHEETS ===================
+async function loadMemberData() {
+  try {
+    // 1. Ambil ID dari URL atau pakai default
+    currentMemberId = getParameterByName('id') || CONFIG.DEFAULT_ID;
+    
+    // 2. Update loading display
+    document.getElementById('loadingId').textContent = `ID: ${currentMemberId}`;
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('content').style.display = 'none';
+    hideError();
+    
+    // 3. Fetch data dari Google Apps Script API
+    const apiUrl = `${CONFIG.API_URL}?id=${encodeURIComponent(currentMemberId)}&t=${Date.now()}`;
+    console.log('Fetching from:', apiUrl);
+    
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    console.log('API Response:', result);
+    
+    // 4. Handle response
+    if (result.success && result.data) {
+      updateUI(result.data);
+      hideError();
+    } else {
+      // Jika error dari API
+      const errorMsg = result.error || 'Data tidak ditemukan di Google Sheets';
+      showError(`${errorMsg} - Menggunakan data fallback`);
+      loadFallbackData();
+    }
+    
+  } catch (error) {
+    console.error('Error loading data:', error);
+    showError(`Koneksi error: ${error.message} - Menggunakan data fallback`);
+    loadFallbackData();
+  } finally {
+    // 5. Tampilkan konten (baik sukses maupun fallback)
+    setTimeout(() => {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    }, 500);
+  }
+}
+
+function loadFallbackData() {
+  // Gunakan data fallback jika API error
+  const fallbackData = CONFIG.FALLBACK_DATA[currentMemberId] || CONFIG.FALLBACK_DATA['NIA-001'];
+  
+  if (!fallbackData) {
+    // Data fallback minimal
+    const minimalData = {
+      nama: currentMemberId === 'NIA-001' ? 'ELDI SUGIANTO, S.Kom' : `Anggota ${currentMemberId}`,
+      id: currentMemberId,
+      status: 'AKTIF',
+      posisi: 'Anggota',
+      simpanan_pokok: 0,
+      simpanan_wajib: 0,
+      simpanan_sukarela: 0,
+      email: '',
+      whatsapp: '',
+      alamat: 'Data sedang dimuat...'
+    };
+    updateUI(minimalData);
+  } else {
+    updateUI(fallbackData);
+  }
+}
+
+function updateUI(data) {
+  if (!data) return;
+  
+  // Hitung total simpanan
+  const totalSimpanan = 
+    (parseFloat(data.simpanan_pokok) || 0) + 
+    (parseFloat(data.simpanan_wajib) || 0) + 
+    (parseFloat(data.simpanan_sukarela) || 0);
+  
+  // Update basic info
+  document.getElementById('nama').textContent = data.nama || '-';
+  document.getElementById('nia').textContent = `NIA : ${data.id || currentMemberId}`;
+  
+  // Update status
+  const statusElement = document.getElementById('statusText');
+  const status = data.status || 'AKTIF';
+  statusElement.textContent = status;
+  
+  if (status.toUpperCase() === 'TIDAK AKTIF' || status.toUpperCase() === 'NON AKTIF') {
+    statusElement.className = 'status-inactive';
+  } else {
+    statusElement.className = '';
+  }
+  
+  // Update simpanan
+  document.getElementById('pokok').textContent = formatRupiah(data.simpanan_pokok);
+  document.getElementById('wajib').textContent = formatRupiah(data.simpanan_wajib);
+  document.getElementById('sukarela').textContent = formatRupiah(data.simpanan_sukarela);
+  
+  // Update data pribadi
+  document.getElementById('alamat').textContent = data.alamat || '-';
+  document.getElementById('jk').textContent = data.jenis_kelamin || data.jk || '-';
+  document.getElementById('agama').textContent = data.agama || '-';
+  document.getElementById('nik').textContent = data.nik || '-';
+  document.getElementById('email').textContent = data.email || '-';
+  document.getElementById('telepon').textContent = data.whatsapp || data.telepon || '-';
+  document.getElementById('tglDaftar').textContent = formatDate(data.tanggal_bergabung || data.tgl_daftar);
+  
+  // Update keuangan
+  document.getElementById('totalSimpanan').textContent = formatRupiah(totalSimpanan);
+  document.getElementById('totalPinjaman').textContent = formatRupiah(data.total_pinjaman);
+  document.getElementById('shu').textContent = formatRupiah(data.shu_estimasi || data.shu);
+  
+  // Update foto jika ada
+  const fotoUrl = data.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.nama || currentMemberId)}&background=3b82f6&color=fff&size=200`;
+  document.getElementById('fotoProfil').src = fotoUrl;
+  document.getElementById('fotoProfil').alt = data.nama || 'Foto Profil';
+  
+  // Update timestamp
+  const now = new Date();
+  document.getElementById('lastUpdate').textContent = 
+    `Terakhir update: ${now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`;
+  
+  // Update tahun di footer
+  document.getElementById('currentYear').textContent = now.getFullYear();
+}
+
+// =================== ACTION FUNCTIONS ===================
+function refreshData() {
+  loadMemberData();
+  showToast('Memperbarui data...');
+}
+
+function exportPDF() {
+  const memberId = currentMemberId;
+  const nama = document.getElementById('nama').textContent;
+  
+  // Simple print version
+  const printContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Kartu Anggota - ${nama}</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h2 { color: #333; }
+        p { margin: 8px 0; }
+        hr { margin: 20px 0; border: 1px solid #ddd; }
+        .footer { margin-top: 30px; font-size: 12px; color: #666; }
+      </style>
+    </head>
+    <body>
+      <h2>📇 Kartu Anggota Koperasi</h2>
+      <p><strong>Nama:</strong> ${nama}</p>
+      <p><strong>ID Anggota:</strong> ${memberId}</p>
+      <p><strong>Status:</strong> ${document.getElementById('statusText').textContent}</p>
+      <p><strong>Tanggal Cetak:</strong> ${new Date().toLocaleDateString('id-ID')} ${new Date().toLocaleTimeString('id-ID')}</p>
+      <hr>
+      <div class="footer">
+        © Koperasi Asmara Tani ${new Date().getFullYear()}<br>
+        Data dari sistem koperasi digital
+      </div>
+    </body>
+    </html>
+  `;
+  
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+  printWindow.print();
+}
+
+function showToast(message) {
+  // Buat toast element
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 255, 160, 0.9);
+    color: #003a24;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  `;
+  
+  document.body.appendChild(toast);
+  
+  // Hapus setelah 2 detik
+  setTimeout(() => {
+    document.body.removeChild(toast);
+  }, 2000);
+}
+
+// =================== INITIALIZATION ===================
+function initializeApp() {
+  // 1. Load data pertama kali
+  loadMemberData();
+  
+  // 2. Setup auto-refresh
+  if (CONFIG.REFRESH_INTERVAL > 0) {
+    refreshTimer = setInterval(loadMemberData, CONFIG.REFRESH_INTERVAL);
+  }
+  
+  // 3. Setup tahun di footer
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+  
+  // 4. Update URL jika ada parameter id
+  const urlId = getParameterByName('id');
+  if (urlId) {
+    document.title = `Kartu Anggota - ${urlId}`;
+  }
+}
+
+// =================== EVENT LISTENERS ===================
+document.addEventListener('DOMContentLoaded', initializeApp);
+
+// =================== GLOBAL FUNCTIONS ===================
+// Untuk akses dari console browser
+window.debugData = function(id = 'NIA-001') {
+  currentMemberId = id;
+  loadMemberData();
+  console.log('Debug: Loading data for', id);
+};
+
+window.getCurrentData = function() {
+  return {
+    id: currentMemberId,
+    timestamp: new Date().toISOString()
+  };
+};
+</script>
+
+</body>
+</html>

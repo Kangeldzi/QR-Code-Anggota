@@ -308,13 +308,10 @@ body{
 <script>
   // =================== CONFIGURATION ===================
 const CONFIG = {
-  // URL Google Apps Script API (dari deploy script)
-  API_URL: 'https://script.google.com/macros/s/1lWx-Utyl91udeO00NRfED3DydP39z1NXsX7grnzKEgU/exec',
-  
-  // Default ID jika tidak ada parameter
+  // Pakai GitHub JSON (lebih reliable)
+  API_URL: 'https://raw.githubusercontent.com/Kangeldzi/QR-Code-Anggota/main/data.json',
   DEFAULT_ID: 'NIA-001'
 };
-
 // =================== HELPER FUNCTIONS ===================
 function formatRupiah(angka) {
   return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

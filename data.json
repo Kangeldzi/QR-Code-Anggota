@@ -1,0 +1,20 @@
+{
+  "NIA-001": {
+    "nama": "ELDI SUGIANTO, S.Kom",
+    "email": "eldzi4212@gmail.com",
+    "status": "AKTIF",
+    "posisi": "Anggota",
+    "alamat": "Jl. Contoh No. 123",
+    "whatsapp": "08123456789",
+    "jenis_kelamin": "Laki-laki",
+    "agama": "Islam",
+    "nik": "1234567890123456",
+    "tanggal_bergabung": "2023-01-15",
+    "simpanan_pokok": 500000,
+    "simpanan_wajib": 100000,
+    "simpanan_sukarela": 250000,
+    "total_pinjaman": 0,
+    "shu_estimasi": 75000,
+    "foto": "https://ui-avatars.com/api/?name=Eldi+Sugianto&background=3b82f6&color=fff"
+  }
+}

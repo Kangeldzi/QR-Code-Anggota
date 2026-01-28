@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* [SAMA PERSIS DENGAN CSS ANDA] */
 body{
   margin:0;
   background:linear-gradient(180deg,#061b12,#020b07);
@@ -20,6 +19,7 @@ body{
   min-height:100vh;
 }
 
+/* KARTU */
 .card{
   width:100%;
   max-width:390px;
@@ -31,12 +31,14 @@ body{
   align-self:center;
 }
 
+/* HEADER */
 .header{
   text-align:center;
   border-bottom:1px dashed rgba(255,255,255,.25);
   padding-bottom:14px;
 }
 
+/* LOGO GLASS */
 .logo-wrap{
   width:86px;
   height:86px;
@@ -80,6 +82,7 @@ body{
   opacity:.85;
 }
 
+/* STATUS */
 .status{
   margin:12px auto;
   text-align:center;
@@ -97,6 +100,7 @@ body{
   color:#ffa000 !important;
 }
 
+/* IDENTITAS */
 .identity{
   text-align:center;
   margin:14px 0;
@@ -111,9 +115,10 @@ body{
   color:#a9ffd1;
 }
 
+/* STATS */
 .stats{
   display:grid;
-  gridTemplateColumns:repeat(3,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:10px;
   margin:16px 0;
 }
@@ -129,10 +134,11 @@ body{
 }
 .stat b{
   display:block;
-  marginTop:6px;
+  margin-top:6px;
   font-size:13px;
 }
 
+/* DATA */
 .data{
   font-size:12px;
 }
@@ -146,6 +152,7 @@ body{
   color:#b6ffd9;
 }
 
+/* ACTION BUTTON */
 .actions{
   display:flex;
   gap:12px;
@@ -171,6 +178,7 @@ body{
   transform:translateY(-2px);
 }
 
+/* FOOTER */
 .footer{
   margin-top:10px;
   text-align:center;
@@ -178,6 +186,7 @@ body{
   opacity:.75;
 }
 
+/* LOADING */
 .loading{
   text-align:center;
   padding:30px;
@@ -196,6 +205,7 @@ body{
   100%{transform:rotate(360deg)}
 }
 
+/* LAST UPDATE */
 .last-update{
   font-size:9px;
   text-align:center;
@@ -203,6 +213,7 @@ body{
   opacity:.6;
 }
 
+/* ERROR MESSAGE */
 .error-message{
   background:rgba(255,0,0,0.1);
   border:1px solid rgba(255,0,0,0.3);
@@ -214,6 +225,7 @@ body{
   color:#ff9999;
 }
 
+/* ID DISPLAY */
 .id-display{
   text-align:center;
   font-size:10px;
@@ -245,8 +257,7 @@ body{
   <div id="content" style="display:none;">
     <div class="header">
       <div class="logo-wrap">
-        <!-- FOTO DEFAULT - AKAN DIUPDATE OTOMATIS -->
-        <img id="fotoProfil" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjh1oM43gxD4iCHpHRBrrbkCHRU5MigalAWf4G5x-cTLfRRxWeeTwGqwNz8FtSdSgcexhRAIWMX7eZoOxo0b-i8kB2EUr44TCkMCZ8VVfQTJpL0AgptbY8hjsTZtqg6jbS2MMOuIVf9FvNOR-JsZr4dvrpqTQT0I5qY5OB063z38W0mTIVhQrBPTASmQp0/s1280/1000175639.jpg">
+        <img id="fotoProfil" src="https://ui-avatars.com/api/?name=K&background=3b82f6&color=fff">
       </div>
       <h1>KOPERASI ASMARA TANI</h1>
       <small>Kartu Anggota Digital</small>
@@ -297,26 +308,61 @@ body{
 <script>
 // =================== CONFIGURATION ===================
 const CONFIG = {
-  // URL Google Apps Script API (dari deploy script)
-  API_URL: 'https://script.google.com/macros/s/AKfycbwYlR4G5U7e8QyHtJvZ/exec',
+  // URL Google Apps Script Anda (GANTI INI!)
+  API_URL: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec',
   
-  // Default ID jika tidak ada parameter
-  DEFAULT_ID: 'NIA-001'
+  // Default ID jika tidak ada parameter URL
+  DEFAULT_ID: 'NIA-001',
+  
+  // Interval auto-refresh (milidetik)
+  REFRESH_INTERVAL: 60000, // 60 detik
+  
+  // Fallback data jika API error
+  FALLBACK_DATA: {
+    'NIA-001': {
+      nama: 'ELDI SUGIANTO, S.Kom',
+      email: 'eldzi4212@gmail.com',
+      status: 'AKTIF',
+      posisi: 'Anggota',
+      alamat: 'Jl. Contoh No. 123',
+      whatsapp: '08123456789',
+      jenis_kelamin: 'Laki-laki',
+      agama: 'Islam',
+      nik: '1234567890123456',
+      tanggal_bergabung: '2023-01-15',
+      simpanan_pokok: 500000,
+      simpanan_wajib: 100000,
+      simpanan_sukarela: 250000,
+      total_pinjaman: 0,
+      shu_estimasi: 75000,
+      foto: 'https://ui-avatars.com/api/?name=Eldi+Sugianto&background=3b82f6&color=fff'
+    }
+  }
 };
+
+// =================== GLOBAL VARIABLES ===================
+let currentMemberId = CONFIG.DEFAULT_ID;
+let refreshTimer = null;
 
 // =================== HELPER FUNCTIONS ===================
 function formatRupiah(angka) {
+  if (!angka && angka !== 0) return 'Rp 0';
   return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 function formatDate(dateString) {
-  if (!dateString) return '-';
-  const date = new Date(dateString);
-  return date.toLocaleDateString('id-ID', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
+  if (!dateString || dateString === '-' || dateString.toLowerCase() === 'loading...') return '-';
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    return date.toLocaleDateString('id-ID', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  } catch {
+    return dateString;
+  }
 }
 
 function getParameterByName(name) {
@@ -324,65 +370,93 @@ function getParameterByName(name) {
   return url.searchParams.get(name);
 }
 
+function showError(message) {
+  const errorElement = document.getElementById('errorMessage');
+  const errorText = document.getElementById('errorText');
+  
+  errorText.textContent = message;
+  errorElement.style.display = 'block';
+  
+  // Auto hide error after 10 seconds
+  setTimeout(() => {
+    errorElement.style.display = 'none';
+  }, 10000);
+}
+
+function hideError() {
+  document.getElementById('errorMessage').style.display = 'none';
+}
+
 // =================== LOAD DATA FROM GOOGLE SHEETS ===================
 async function loadMemberData() {
   try {
     // 1. Ambil ID dari URL atau pakai default
-    const memberId = getParameterByName('id') || CONFIG.DEFAULT_ID;
+    currentMemberId = getParameterByName('id') || CONFIG.DEFAULT_ID;
     
-    // 2. Tampilkan loading
+    // 2. Update loading display
+    document.getElementById('loadingId').textContent = `ID: ${currentMemberId}`;
     document.getElementById('loading').style.display = 'block';
     document.getElementById('content').style.display = 'none';
+    hideError();
     
-    // 3. Fetch data dari Google Sheets API
-    const response = await fetch(`${CONFIG.API_URL}?id=${memberId}`);
-    const result = await response.json();
+    // 3. Fetch data dari Google Apps Script API
+    const apiUrl = `${CONFIG.API_URL}?id=${encodeURIComponent(currentMemberId)}&t=${Date.now()}`;
+    console.log('Fetching from:', apiUrl);
     
-    // 4. Jika sukses, update UI
-    if (result.success && result.data) {
-      updateUI(result.data);
-    } else {
-      // Jika error, tampilkan data default
-      loadDefaultData(memberId, result.error);
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    // 5. Hide loading, show content
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('content').style.display = 'block';
+    const result = await response.json();
+    console.log('API Response:', result);
+    
+    // 4. Handle response
+    if (result.success && result.data) {
+      updateUI(result.data);
+      hideError();
+    } else {
+      // Jika error dari API
+      const errorMsg = result.error || 'Data tidak ditemukan di Google Sheets';
+      showError(`${errorMsg} - Menggunakan data fallback`);
+      loadFallbackData();
+    }
     
   } catch (error) {
     console.error('Error loading data:', error);
-    // Fallback ke default data
-    loadDefaultData(CONFIG.DEFAULT_ID, 'Koneksi error');
+    showError(`Koneksi error: ${error.message} - Menggunakan data fallback`);
+    loadFallbackData();
+  } finally {
+    // 5. Tampilkan konten (baik sukses maupun fallback)
+    setTimeout(() => {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    }, 500);
   }
 }
 
-function loadDefaultData(memberId, errorMessage = '') {
-  // Data default jika API error
-  const defaultData = {
-    nama: memberId === 'NIA-001' ? 'ELDI SUGIANTO, S.Kom' : `Anggota ${memberId}`,
-    nia: memberId,
-    status: 'AKTIF',
-    simpanan_pokok: 500000,
-    simpanan_wajib: 100000,
-    simpanan_sukarela: 250000,
-    alamat: 'Data sedang dimuat...',
-    jenis_kelamin: '-',
-    agama: '-',
-    nik: '-',
-    email: memberId === 'NIA-001' ? 'eldzi4212@gmail.com' : '-',
-    whatsapp: '-',
-    tanggal_bergabung: '-',
-    total_pinjaman: 0,
-    shu_estimasi: 0
-  };
+function loadFallbackData() {
+  // Gunakan data fallback jika API error
+  const fallbackData = CONFIG.FALLBACK_DATA[currentMemberId] || CONFIG.FALLBACK_DATA['NIA-001'];
   
-  updateUI(defaultData);
-  
-  // Tampilkan error kecil di footer jika ada
-  if (errorMessage) {
-    document.getElementById('lastUpdate').innerHTML = 
-      `⚠️ ${errorMessage} | Terakhir update: ${new Date().toLocaleString('id-ID')}`;
+  if (!fallbackData) {
+    // Data fallback minimal
+    const minimalData = {
+      nama: currentMemberId === 'NIA-001' ? 'ELDI SUGIANTO, S.Kom' : `Anggota ${currentMemberId}`,
+      id: currentMemberId,
+      status: 'AKTIF',
+      posisi: 'Anggota',
+      simpanan_pokok: 0,
+      simpanan_wajib: 0,
+      simpanan_sukarela: 0,
+      email: '',
+      whatsapp: '',
+      alamat: 'Data sedang dimuat...'
+    };
+    updateUI(minimalData);
+  } else {
+    updateUI(fallbackData);
   }
 }
 
@@ -391,27 +465,29 @@ function updateUI(data) {
   
   // Hitung total simpanan
   const totalSimpanan = 
-    (data.simpanan_pokok || 0) + 
-    (data.simpanan_wajib || 0) + 
-    (data.simpanan_sukarela || 0);
+    (parseFloat(data.simpanan_pokok) || 0) + 
+    (parseFloat(data.simpanan_wajib) || 0) + 
+    (parseFloat(data.simpanan_sukarela) || 0);
   
   // Update basic info
   document.getElementById('nama').textContent = data.nama || '-';
-  document.getElementById('nia').textContent = `NIA : ${data.id || data.nia || '-'}`;
+  document.getElementById('nia').textContent = `NIA : ${data.id || currentMemberId}`;
   
   // Update status
   const statusElement = document.getElementById('statusText');
-  statusElement.textContent = data.status || 'AKTIF';
-  if (data.status && data.status.toUpperCase() === 'TIDAK AKTIF') {
+  const status = data.status || 'AKTIF';
+  statusElement.textContent = status;
+  
+  if (status.toUpperCase() === 'TIDAK AKTIF' || status.toUpperCase() === 'NON AKTIF') {
     statusElement.className = 'status-inactive';
   } else {
     statusElement.className = '';
   }
   
   // Update simpanan
-  document.getElementById('pokok').textContent = formatRupiah(data.simpanan_pokok || 0);
-  document.getElementById('wajib').textContent = formatRupiah(data.simpanan_wajib || 0);
-  document.getElementById('sukarela').textContent = formatRupiah(data.simpanan_sukarela || 0);
+  document.getElementById('pokok').textContent = formatRupiah(data.simpanan_pokok);
+  document.getElementById('wajib').textContent = formatRupiah(data.simpanan_wajib);
+  document.getElementById('sukarela').textContent = formatRupiah(data.simpanan_sukarela);
   
   // Update data pribadi
   document.getElementById('alamat').textContent = data.alamat || '-';
@@ -420,66 +496,137 @@ function updateUI(data) {
   document.getElementById('nik').textContent = data.nik || '-';
   document.getElementById('email').textContent = data.email || '-';
   document.getElementById('telepon').textContent = data.whatsapp || data.telepon || '-';
-  document.getElementById('tglDaftar').textContent = formatDate(data.tanggal_bergabung) || '-';
+  document.getElementById('tglDaftar').textContent = formatDate(data.tanggal_bergabung || data.tgl_daftar);
   
   // Update keuangan
   document.getElementById('totalSimpanan').textContent = formatRupiah(totalSimpanan);
-  document.getElementById('totalPinjaman').textContent = formatRupiah(data.total_pinjaman || 0);
-  document.getElementById('shu').textContent = formatRupiah(data.shu_estimasi || data.shu || 0);
-  
-  // Update timestamp
-  document.getElementById('lastUpdate').textContent = 
-    `Terakhir update: ${new Date().toLocaleString('id-ID')}`;
+  document.getElementById('totalPinjaman').textContent = formatRupiah(data.total_pinjaman);
+  document.getElementById('shu').textContent = formatRupiah(data.shu_estimasi || data.shu);
   
   // Update foto jika ada
-  if (data.foto) {
-    const logoImg = document.querySelector('.logo-wrap img');
-    if (logoImg) {
-      logoImg.src = data.foto;
-      logoImg.alt = data.nama;
-    }
-  }
+  const fotoUrl = data.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.nama || currentMemberId)}&background=3b82f6&color=fff&size=200`;
+  document.getElementById('fotoProfil').src = fotoUrl;
+  document.getElementById('fotoProfil').alt = data.nama || 'Foto Profil';
+  
+  // Update timestamp
+  const now = new Date();
+  document.getElementById('lastUpdate').textContent = 
+    `Terakhir update: ${now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`;
+  
+  // Update tahun di footer
+  document.getElementById('currentYear').textContent = now.getFullYear();
 }
 
-// =================== EXPORT FUNCTION ===================
+// =================== ACTION FUNCTIONS ===================
+function refreshData() {
+  loadMemberData();
+  showToast('Memperbarui data...');
+}
+
 function exportPDF() {
-  const memberId = getParameterByName('id') || CONFIG.DEFAULT_ID;
+  const memberId = currentMemberId;
   const nama = document.getElementById('nama').textContent;
   
   // Simple print version
   const printContent = `
-    <h2>Kartu Anggota Koperasi</h2>
-    <p><strong>Nama:</strong> ${nama}</p>
-    <p><strong>ID:</strong> ${memberId}</p>
-    <p><strong>Status:</strong> ${document.getElementById('statusText').textContent}</p>
-    <p><strong>Tanggal:</strong> ${new Date().toLocaleDateString('id-ID')}</p>
-    <hr>
-    <p>© Koperasi Asmara Tani ${new Date().getFullYear()}</p>
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Kartu Anggota - ${nama}</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h2 { color: #333; }
+        p { margin: 8px 0; }
+        hr { margin: 20px 0; border: 1px solid #ddd; }
+        .footer { margin-top: 30px; font-size: 12px; color: #666; }
+      </style>
+    </head>
+    <body>
+      <h2>📇 Kartu Anggota Koperasi</h2>
+      <p><strong>Nama:</strong> ${nama}</p>
+      <p><strong>ID Anggota:</strong> ${memberId}</p>
+      <p><strong>Status:</strong> ${document.getElementById('statusText').textContent}</p>
+      <p><strong>Tanggal Cetak:</strong> ${new Date().toLocaleDateString('id-ID')} ${new Date().toLocaleTimeString('id-ID')}</p>
+      <hr>
+      <div class="footer">
+        © Koperasi Asmara Tani ${new Date().getFullYear()}<br>
+        Data dari sistem koperasi digital
+      </div>
+    </body>
+    </html>
   `;
   
   const printWindow = window.open('', '_blank');
-  printWindow.document.write(`
-    <html><head><title>Kartu Anggota - ${nama}</title></head>
-    <body>${printContent}</body></html>
-  `);
+  printWindow.document.write(printContent);
   printWindow.document.close();
   printWindow.print();
 }
 
-// =================== AUTO REFRESH ===================
-// Auto refresh data setiap 60 detik
-setInterval(loadMemberData, 60000);
+function showToast(message) {
+  // Buat toast element
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 255, 160, 0.9);
+    color: #003a24;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  `;
+  
+  document.body.appendChild(toast);
+  
+  // Hapus setelah 2 detik
+  setTimeout(() => {
+    document.body.removeChild(toast);
+  }, 2000);
+}
 
-// =================== INITIAL LOAD ===================
-// Load data saat halaman dibuka
-document.addEventListener('DOMContentLoaded', loadMemberData);
+// =================== INITIALIZATION ===================
+function initializeApp() {
+  // 1. Load data pertama kali
+  loadMemberData();
+  
+  // 2. Setup auto-refresh
+  if (CONFIG.REFRESH_INTERVAL > 0) {
+    refreshTimer = setInterval(loadMemberData, CONFIG.REFRESH_INTERVAL);
+  }
+  
+  // 3. Setup tahun di footer
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+  
+  // 4. Update URL jika ada parameter id
+  const urlId = getParameterByName('id');
+  if (urlId) {
+    document.title = `Kartu Anggota - ${urlId}`;
+  }
+}
 
-// =================== DEBUG / TEST ===================
-// Untuk testing dari console browser
+// =================== EVENT LISTENERS ===================
+document.addEventListener('DOMContentLoaded', initializeApp);
+
+// =================== GLOBAL FUNCTIONS ===================
+// Untuk akses dari console browser
 window.debugData = function(id = 'NIA-001') {
-  loadMemberData(id);
-  console.log('Loading data for:', id);
+  currentMemberId = id;
+  loadMemberData();
+  console.log('Debug: Loading data for', id);
+};
+
+window.getCurrentData = function() {
+  return {
+    id: currentMemberId,
+    timestamp: new Date().toISOString()
+  };
 };
 </script>
+
 </body>
 </html>

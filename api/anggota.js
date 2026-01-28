@@ -1,33 +1,62 @@
-import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { getAnggotaById } from '../../lib/googleSheets';
 
 export default async function handler(req, res) {
-    const { id } = req.query;
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  
+  // Tangani OPTIONS request (CORS preflight)
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
+  // Hanya terima GET requests
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  const { id } = req.query;
+  
+  if (!id) {
+    return res.status(400).json({ 
+      error: 'ID anggota diperlukan',
+      contoh: '/api/anggota?id=NIA-001' 
+    });
+  }
+  
+  try {
+    const anggota = await getAnggotaById(id);
     
-    const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
-    await doc.useServiceAccountAuth({
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    if (!anggota) {
+      return res.status(404).json({ 
+        error: 'Anggota tidak ditemukan',
+        id: id 
+      });
+    }
+    
+    // Hitung total simpanan
+    const totalSimpanan = 
+      (anggota.simpanan_pokok || 0) + 
+      (anggota.simpanan_wajib || 0) + 
+      (anggota.simpanan_sukarela || 0);
+    
+    // Response sukses
+    res.status(200).json({
+      success: true,
+      data: {
+        ...anggota,
+        total_simpanan: totalSimpanan
+      },
+      timestamp: new Date().toISOString(),
+      source: 'google-sheets'
     });
     
-    await doc.loadInfo();
-    const sheet = doc.sheetsByIndex[0];
-    const rows = await sheet.getRows();
-    
-    // CARI ANGGOTA BERDASARKAN ID
-    const anggota = rows.find(row => row.get('ID') === id);
-    
-    if (anggota) {
-        res.json({
-            success: true,
-            data: {
-                id: anggota.get('ID'),
-                nama: anggota.get('Nama'),
-                email: anggota.get('Email'),
-                status: anggota.get('Status'),
-                // ... data lainnya
-            }
-        });
-    } else {
-        res.status(404).json({ error: 'Anggota tidak ditemukan' });
-    }
+  } catch (error) {
+    console.error('API Error:', error);
+    res.status(500).json({ 
+      error: 'Terjadi kesalahan server',
+      message: error.message 
+    });
+  }
 }

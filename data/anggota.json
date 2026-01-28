@@ -1,7 +1,30 @@
-// Alternatif API URL (jika Google Apps Script susah)
-const CONFIG = {
-  // Pilih salah satu:
-  // API_URL: 'https://script.google.com/macros/s/AKfycbwNUuCYm8n-k5eLuGRvGmJF9BehPx4n-wOeGdd-FTouyXYEStL47_evHyIEXyj4ep8q/exec', // Google Apps Script
-  API_URL: 'https://raw.githubusercontent.com/Kangeldzi/QR-Code-Anggota/main/data/anggota.json', // JSON file
-  DEFAULT_ID: 'NIA-001'
-};
+{
+  "NIA-001": {
+    "nama": "ELDI SUGIANTO, S.Kom",
+    "email": "eldzi4212@gmail.com",
+    "status": "AKTIF",
+    "posisi": "Anggota",
+    "alamat": "Kp. Banjar Karya, Ciasmara-Pamijahan",
+    "whatsapp": "085218483129",
+    "jenis_kelamin": "Laki-laki",
+    "agama": "Islam",
+    "nik": "3201171212810011",
+    "tanggal_bergabung": "2026-09-18",
+    "simpanan_pokok": 200000,
+    "simpanan_wajib": 0,
+    "simpanan_sukarela": 0,
+    "total_pinjaman": 0,
+    "shu_estimasi": 44000,
+    "foto": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjh1oM43gxD4iCHpHRBrrbkCHRU5MigalAWf4G5x-cTLfRRxWeeTwGqwNz8FtSdSgcexhRAIWMX7eZoOxo0b-i8kB2EUr44TCkMCZ8VVfQTJpL0AgptbY8hjsTZtqg6jbS2MMOuIVf9FvNOR-JsZr4dvrpqTQT0I5qY5OB063z38W0mTIVhQrBPTASmQp0/s1280/1000175639.jpg"
+  },
+  "NIA-002": {
+    "nama": "",
+    "email": "",
+    "status": "",
+    "posisi": "",
+    "whatsapp": "",
+    "simpanan_pokok": 200000,
+    "simpanan_wajib": 0,
+    "simpanan_sukarela": 0
+  }
+}

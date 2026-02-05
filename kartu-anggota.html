@@ -245,7 +245,7 @@ body{
   <div id="content" style="display:none;">
     <div class="header">
       <div class="logo-wrap">
-        <img id="fotoProfil" src="https://ui-avatars.com/api/?name=K&background=3b82f6&color=fff">
+        <img id="fotoProfil" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjh1oM43gxD4iCHpHRBrrbkCHRU5MigalAWf4G5x-cTLfRRxWeeTwGqwNz8FtSdSgcexhRAIWMX7eZoOxo0b-i8kB2EUr44TCkMCZ8VVfQTJpL0AgptbY8hjsTZtqg6jbS2MMOuIVf9FvNOR-JsZr4dvrpqTQT0I5qY5OB063z38W0mTIVhQrBPTASmQp0/s1280/1000175639.jpg">
       </div>
       <h1>KOPERASI ASMARA TANI</h1>
       <small>Kartu Anggota Digital</small>
@@ -297,7 +297,7 @@ body{
 // =================== CONFIGURATION ===================
 const CONFIG = {
   // URL ke data.json di GitHub Anda
-  DATA_URL: 'https://raw.githubusercontent.com/Kangeldzi/QR-Code-Anggota/main/data.json',
+  DATA_URL: 'https://script.google.com/macros/s/AKfycbxZtNu-nEfVM6Fv0w4iHXTPixTBlp-pJHuhvngytbGlCpmDBqV2uG8_JgNGtJtWkLd_/exec',
   
   // Default ID jika tidak ada parameter URL
   DEFAULT_ID: 'NIA-001',
@@ -464,7 +464,7 @@ function useFallbackData() {
     email: '',
     whatsapp: '',
     alamat: 'Data tidak ditemukan',
-    foto: `https://ui-avatars.com/api/?name=${encodeURIComponent(currentMemberId)}&background=3b82f6&color=fff`
+    foto: `https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjh1oM43gxD4iCHpHRBrrbkCHRU5MigalAWf4G5x-cTLfRRxWeeTwGqwNz8FtSdSgcexhRAIWMX7eZoOxo0b-i8kB2EUr44TCkMCZ8VVfQTJpL0AgptbY8hjsTZtqg6jbS2MMOuIVf9FvNOR-JsZr4dvrpqTQT0I5qY5OB063z38W0mTIVhQrBPTASmQp0/s1280/1000175639.jpg`
   };
   
   updateUI(fallbackData);
@@ -514,7 +514,7 @@ function updateUI(data) {
   document.getElementById('shu').textContent = formatRupiah(data.shu_estimasi || data.shu);
   
   // Update foto jika ada
-  const fotoUrl = data.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.nama || currentMemberId)}&background=3b82f6&color=fff&size=200`;
+  const fotoUrl = data.foto || `https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjh1oM43gxD4iCHpHRBrrbkCHRU5MigalAWf4G5x-cTLfRRxWeeTwGqwNz8FtSdSgcexhRAIWMX7eZoOxo0b-i8kB2EUr44TCkMCZ8VVfQTJpL0AgptbY8hjsTZtqg6jbS2MMOuIVf9FvNOR-JsZr4dvrpqTQT0I5qY5OB063z38W0mTIVhQrBPTASmQp0/s1280/1000175639.jpg/?name=${encodeURIComponent(data.nama || currentMemberId)}&background=3b82f6&color=fff&size=200`;
   document.getElementById('fotoProfil').src = fotoUrl;
   document.getElementById('fotoProfil').alt = data.nama || 'Foto Profil';
   
@@ -666,6 +666,5 @@ window.getCurrentMember = function() {
   };
 };
 </script>
-
 </body>
 </html>
